@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Entity
 @Table(name = "coupon_issuances")
@@ -25,14 +23,10 @@ public class CouponIssuance extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "used_at")
-    private LocalDateTime usedAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private IssuanceStatus status = IssuanceStatus.ISSUED;
-
-    public enum IssuanceStatus {
-        ISSUED, USED, EXPIRED, CANCELLED
+    public static CouponIssuance create(Coupon coupon, User user) {
+        CouponIssuance couponIssuance = new CouponIssuance();
+        couponIssuance.coupon = coupon;
+        couponIssuance.user = user;
+        return couponIssuance;
     }
 }
