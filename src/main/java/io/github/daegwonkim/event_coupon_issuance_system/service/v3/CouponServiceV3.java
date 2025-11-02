@@ -27,23 +27,19 @@ public class CouponServiceV3 implements ICouponService {
     @Override
     @Transactional
     public CouponIssueResponse issue(CouponIssueRequest request) {
-        // 사용자 확인
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        // 쿠폰 발급 현황 확인
         Coupon coupon = couponRepository.findById(request.couponId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
 
-        // 쿠폰 중복 발급 확인
         Optional<CouponIssuance> couponIssuance =
                 couponIssuanceRepository.findByUserIdAndCouponId(request.userId(), request.couponId());
 
         if (couponIssuance.isPresent()) {
-            throw new IllegalArgumentException("중복으로 발급할 수 없는 쿠폰입니다.");
+            throw new IllegalStateException("중복으로 발급할 수 없는 쿠폰입니다.");
         }
 
-        // 쿠폰 발급
         CouponIssuance newCouponIssuance = CouponIssuance.create(coupon, user);
         coupon.decreaseStock();
         couponIssuanceRepository.save(newCouponIssuance);

@@ -10,6 +10,10 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponReposi
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.service.ICouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,29 +29,35 @@ public class CouponServiceV4 implements ICouponService {
     private final CouponIssuanceRepository couponIssuanceRepository;
 
     @Override
+    @Retryable(
+            retryFor = OptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 100)
+    )
     @Transactional
     public CouponIssueResponse issue(CouponIssueRequest request) {
-        // 사용자 확인
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        // 쿠폰 발급 현황 확인
         Coupon coupon = couponRepository.findById(request.couponId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
 
-        // 쿠폰 중복 발급 확인
         Optional<CouponIssuance> couponIssuance =
                 couponIssuanceRepository.findByUserIdAndCouponId(request.userId(), request.couponId());
 
         if (couponIssuance.isPresent()) {
-            throw new IllegalArgumentException("중복으로 발급할 수 없는 쿠폰입니다.");
+            throw new IllegalStateException("중복으로 발급할 수 없는 쿠폰입니다.");
         }
 
-        // 쿠폰 발급
         CouponIssuance newCouponIssuance = CouponIssuance.create(coupon, user);
         coupon.decreaseStock();
         couponIssuanceRepository.save(newCouponIssuance);
 
         return new CouponIssueResponse(request.userId(), request.couponId(), LocalDateTime.now());
+    }
+
+    @Recover
+    public CouponIssueResponse recover(OptimisticLockingFailureException e, CouponIssueRequest request) {
+        throw new IllegalStateException("쿠폰 발급에 실패했습니다. 잠시 후 다시 시도해주세요.");
     }
 }

@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password:
-    url: jdbc:mysql://localhost:3306/reservation
+    url: jdbc:mysql://localhost:3306/event_coupon_issuance_system
   jpa:
     hibernate:
       ddl-auto: create

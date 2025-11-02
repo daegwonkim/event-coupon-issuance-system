@@ -40,7 +40,7 @@ public class CouponServiceV1 implements ICouponService {
                 couponIssuanceRepository.findByUserIdAndCouponId(request.userId(), request.couponId());
 
         if (couponIssuance.isPresent()) {
-            throw new IllegalArgumentException("중복으로 발급할 수 없는 쿠폰입니다.");
+            throw new IllegalStateException("중복으로 발급할 수 없는 쿠폰입니다.");
         }
 
         // 쿠폰 발급
