@@ -23,7 +23,7 @@ public class Coupon extends BaseEntity {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @Version
+//    @Version
     private Long version;
 
     public static Coupon create(Event event, Integer stock) {
