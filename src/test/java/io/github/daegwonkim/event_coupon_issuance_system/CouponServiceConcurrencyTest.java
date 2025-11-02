@@ -8,9 +8,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponIssuan
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.EventRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV1;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV2;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV2Wrapper;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v2.CouponServiceV2Wrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

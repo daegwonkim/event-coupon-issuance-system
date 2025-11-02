@@ -9,7 +9,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.entity.User;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponIssuanceRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV1;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v1.CouponServiceV1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

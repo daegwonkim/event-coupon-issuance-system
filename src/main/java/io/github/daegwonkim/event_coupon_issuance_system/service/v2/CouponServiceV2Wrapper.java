@@ -1,7 +1,8 @@
-package io.github.daegwonkim.event_coupon_issuance_system.service;
+package io.github.daegwonkim.event_coupon_issuance_system.service.v2;
 
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueRequest;
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueResponse;
+import io.github.daegwonkim.event_coupon_issuance_system.service.ICouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

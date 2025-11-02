@@ -2,7 +2,7 @@ package io.github.daegwonkim.event_coupon_issuance_system.controller;
 
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueRequest;
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueResponse;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV1;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v1.CouponServiceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

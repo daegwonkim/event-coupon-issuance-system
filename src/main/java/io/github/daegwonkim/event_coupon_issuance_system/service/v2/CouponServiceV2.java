@@ -1,4 +1,4 @@
-package io.github.daegwonkim.event_coupon_issuance_system.service;
+package io.github.daegwonkim.event_coupon_issuance_system.service.v2;
 
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueRequest;
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueResponse;
@@ -8,6 +8,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.entity.User;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponIssuanceRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
+import io.github.daegwonkim.event_coupon_issuance_system.service.ICouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
