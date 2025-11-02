@@ -20,25 +20,21 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    @Column(name = "total_quantity", nullable = false)
-    private Integer totalQuantity;
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
 
-    @Column(name = "issued_quantity", nullable = false)
-    private Integer issuedQuantity;
-
-    public static Coupon create(Event event, Integer totalQuantity, Integer issuedQuantity) {
+    public static Coupon create(Event event, Integer stock) {
         Coupon coupon = new Coupon();
         coupon.event = event;
-        coupon.totalQuantity = totalQuantity;
-        coupon.issuedQuantity = issuedQuantity;
+        coupon.stock = stock;
         return coupon;
     }
 
     public void decreaseStock() {
-        if (totalQuantity <= issuedQuantity) {
+        if (stock <= 0) {
             throw new IllegalArgumentException("쿠폰 재고가 모두 소진되었습니다.");
         }
 
-        issuedQuantity++;
+        stock--;
     }
 }

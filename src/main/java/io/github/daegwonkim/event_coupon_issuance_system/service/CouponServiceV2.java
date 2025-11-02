@@ -10,19 +10,22 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponReposi
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CouponService {
+public class CouponServiceV2 implements ICouponService {
 
     private final UserRepository userRepository;
     private final CouponRepository couponRepository;
     private final CouponIssuanceRepository couponIssuanceRepository;
 
-    public CouponIssueResponse issueV1(CouponIssueRequest request) {
+    @Override
+    @Transactional
+    public CouponIssueResponse issue(CouponIssueRequest request) {
         // 사용자 확인
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
