@@ -28,7 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class CouponServiceIntegrationTest {
 
     @Autowired
-    private CouponServiceV1 couponServiceV1;
+    private CouponServiceV1 couponService;
 
     @Autowired
     private EventRepository eventRepository;
@@ -68,7 +68,7 @@ class CouponServiceIntegrationTest {
         );
 
         // when
-        CouponIssueResponse response = couponServiceV1.issue(request);
+        CouponIssueResponse response = couponService.issue(request);
 
         // then
         assertThat(response.userId()).isEqualTo(testUser.getId());
@@ -97,10 +97,10 @@ class CouponServiceIntegrationTest {
         );
 
         // 첫 번째 발급
-        couponServiceV1.issue(request);
+        couponService.issue(request);
 
         // when & then - 두 번째 발급 시도
-        assertThatThrownBy(() -> couponServiceV1.issue(request))
+        assertThatThrownBy(() -> couponService.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복으로 발급할 수 없는 쿠폰입니다.");
 
@@ -117,9 +117,9 @@ class CouponServiceIntegrationTest {
         User user3 = userRepository.save(User.create("테스트유저3"));
 
         // when
-        couponServiceV1.issue(new CouponIssueRequest(testUser.getId(), testCoupon.getId()));
-        couponServiceV1.issue(new CouponIssueRequest(user2.getId(), testCoupon.getId()));
-        couponServiceV1.issue(new CouponIssueRequest(user3.getId(), testCoupon.getId()));
+        couponService.issue(new CouponIssueRequest(testUser.getId(), testCoupon.getId()));
+        couponService.issue(new CouponIssueRequest(user2.getId(), testCoupon.getId()));
+        couponService.issue(new CouponIssueRequest(user3.getId(), testCoupon.getId()));
 
         // then
         long issuanceCount = couponIssuanceRepository.count();

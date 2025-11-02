@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 class CouponServiceUnitTest {
 
     @InjectMocks
-    private CouponServiceV1 couponServiceV1;
+    private CouponServiceV1 couponService;
 
     @Mock
     private UserRepository userRepository;
@@ -47,7 +47,7 @@ class CouponServiceUnitTest {
     void setUp() {
         testEvent = new Event(1L, "테스트이벤트");
         testUser = new User(1L, "테스트유저");
-        testCoupon = new Coupon(1L, testEvent, 100);
+        testCoupon = new Coupon(1L, testEvent, 100, 0L);
     }
 
     @Test
@@ -62,7 +62,7 @@ class CouponServiceUnitTest {
                 .thenReturn(Optional.empty());
 
         // when
-        CouponIssueResponse response = couponServiceV1.issue(request);
+        CouponIssueResponse response = couponService.issue(request);
 
         // then
         assertThat(response.userId()).isEqualTo(1L);
@@ -82,7 +82,7 @@ class CouponServiceUnitTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> couponServiceV1.issue(request))
+        assertThatThrownBy(() -> couponService.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
 
@@ -99,7 +99,7 @@ class CouponServiceUnitTest {
         when(couponRepository.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> couponServiceV1.issue(request))
+        assertThatThrownBy(() -> couponService.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 쿠폰입니다.");
 
@@ -119,7 +119,7 @@ class CouponServiceUnitTest {
                 .thenReturn(Optional.of(existingIssuance));
 
         // when & then
-        assertThatThrownBy(() -> couponServiceV1.issue(request))
+        assertThatThrownBy(() -> couponService.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복으로 발급할 수 없는 쿠폰입니다.");
 

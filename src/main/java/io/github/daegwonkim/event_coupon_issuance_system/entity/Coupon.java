@@ -23,6 +23,9 @@ public class Coupon extends BaseEntity {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
+    @Version
+    private Long version = 0L;
+
     public static Coupon create(Event event, Integer stock) {
         Coupon coupon = new Coupon();
         coupon.event = event;
