@@ -18,4 +18,10 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String username;
+
+    public static User create(String username) {
+        User user = new User();
+        user.username = username;
+        return user;
+    }
 }

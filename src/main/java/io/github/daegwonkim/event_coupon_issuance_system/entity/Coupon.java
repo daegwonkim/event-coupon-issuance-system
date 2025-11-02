@@ -26,6 +26,14 @@ public class Coupon extends BaseEntity {
     @Column(name = "issued_quantity", nullable = false)
     private Integer issuedQuantity;
 
+    public static Coupon create(Event event, Integer totalQuantity, Integer issuedQuantity) {
+        Coupon coupon = new Coupon();
+        coupon.event = event;
+        coupon.totalQuantity = totalQuantity;
+        coupon.issuedQuantity = issuedQuantity;
+        return coupon;
+    }
+
     public void decreaseStock() {
         if (totalQuantity <= issuedQuantity) {
             throw new IllegalArgumentException("쿠폰 재고가 모두 소진되었습니다.");

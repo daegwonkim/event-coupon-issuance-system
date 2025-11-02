@@ -20,4 +20,10 @@ public class Event extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+
+    public static Event create(String name) {
+        Event event = new Event();
+        event.name = name;
+        return event;
+    }
 }
