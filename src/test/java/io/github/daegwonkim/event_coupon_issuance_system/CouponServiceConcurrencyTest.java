@@ -9,6 +9,8 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponReposi
 import io.github.daegwonkim.event_coupon_issuance_system.repository.EventRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v2.CouponServiceV2Wrapper;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v3.CouponServiceV3;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v3.CouponServiceV3Wrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class CouponServiceConcurrencyTest {
 
     @Autowired
-    private CouponServiceV2Wrapper couponService;
+    private CouponServiceV3Wrapper couponService;
 
     @Autowired
     private EventRepository eventRepository;
