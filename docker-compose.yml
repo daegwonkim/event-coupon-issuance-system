@@ -1,0 +1,18 @@
+services:
+  redis:
+    image: redis:7.4.2-alpine
+    ports:
+      - "6379:6379"
+    command: [ "redis-server" ]
+    networks:
+      - redis-network
+    volumes:
+      - redis_volume_data:/data
+
+networks:
+  redis-network:
+    driver: bridge
+
+volumes:
+  redis_volume_data:
+  redis_insight_volume_data:

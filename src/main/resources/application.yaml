@@ -9,3 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  data:
+    redis:
+      host: localhost
+      port: 6379
