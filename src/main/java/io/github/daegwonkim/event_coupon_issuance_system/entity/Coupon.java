@@ -1,10 +1,7 @@
 package io.github.daegwonkim.event_coupon_issuance_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -20,6 +17,7 @@ public class Coupon extends BaseEntity {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @Setter
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
