@@ -10,7 +10,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponIssuan
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.EventRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponService;
+import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class CouponServiceIntegrationTest {
 
     @Autowired
-    private CouponService couponService;
+    private CouponServiceV1 couponServiceV1;
 
     @Autowired
     private EventRepository eventRepository;
@@ -55,7 +55,7 @@ class CouponServiceIntegrationTest {
 
         testEvent = eventRepository.save(Event.create("테스트이벤트"));
         testUser = userRepository.save(User.create("테스트유저"));
-        testCoupon = couponRepository.save(Coupon.create(testEvent, 100, 0));
+        testCoupon = couponRepository.save(Coupon.create(testEvent, 100));
     }
 
     @Test
@@ -68,7 +68,7 @@ class CouponServiceIntegrationTest {
         );
 
         // when
-        CouponIssueResponse response = couponService.issueV1(request);
+        CouponIssueResponse response = couponServiceV1.issue(request);
 
         // then
         assertThat(response.userId()).isEqualTo(testUser.getId());
@@ -84,7 +84,7 @@ class CouponServiceIntegrationTest {
 
         // 쿠폰 발급 확인
         Coupon updatedCoupon = couponRepository.findById(testCoupon.getId()).get();
-        assertThat(updatedCoupon.getIssuedQuantity()).isEqualTo(1);
+        assertThat(updatedCoupon.getStock()).isEqualTo(99);
     }
 
     @Test
@@ -97,10 +97,10 @@ class CouponServiceIntegrationTest {
         );
 
         // 첫 번째 발급
-        couponService.issueV1(request);
+        couponServiceV1.issue(request);
 
         // when & then - 두 번째 발급 시도
-        assertThatThrownBy(() -> couponService.issueV1(request))
+        assertThatThrownBy(() -> couponServiceV1.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복으로 발급할 수 없는 쿠폰입니다.");
 
@@ -117,15 +117,15 @@ class CouponServiceIntegrationTest {
         User user3 = userRepository.save(User.create("테스트유저3"));
 
         // when
-        couponService.issueV1(new CouponIssueRequest(testUser.getId(), testCoupon.getId()));
-        couponService.issueV1(new CouponIssueRequest(user2.getId(), testCoupon.getId()));
-        couponService.issueV1(new CouponIssueRequest(user3.getId(), testCoupon.getId()));
+        couponServiceV1.issue(new CouponIssueRequest(testUser.getId(), testCoupon.getId()));
+        couponServiceV1.issue(new CouponIssueRequest(user2.getId(), testCoupon.getId()));
+        couponServiceV1.issue(new CouponIssueRequest(user3.getId(), testCoupon.getId()));
 
         // then
         long issuanceCount = couponIssuanceRepository.count();
         assertThat(issuanceCount).isEqualTo(3);
 
         Coupon updatedCoupon = couponRepository.findById(testCoupon.getId()).get();
-        assertThat(updatedCoupon.getIssuedQuantity()).isEqualTo(3);
+        assertThat(updatedCoupon.getStock()).isEqualTo(97);
     }
 }

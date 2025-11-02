@@ -9,7 +9,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.entity.User;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponIssuanceRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
-import io.github.daegwonkim.event_coupon_issuance_system.service.CouponService;
+import io.github.daegwonkim.event_coupon_issuance_system.service.CouponServiceV1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 class CouponServiceUnitTest {
 
     @InjectMocks
-    private CouponService couponService;
+    private CouponServiceV1 couponServiceV1;
 
     @Mock
     private UserRepository userRepository;
@@ -47,7 +47,7 @@ class CouponServiceUnitTest {
     void setUp() {
         testEvent = new Event(1L, "테스트이벤트");
         testUser = new User(1L, "테스트유저");
-        testCoupon = new Coupon(1L, testEvent, 100, 0);
+        testCoupon = new Coupon(1L, testEvent, 100);
     }
 
     @Test
@@ -62,7 +62,7 @@ class CouponServiceUnitTest {
                 .thenReturn(Optional.empty());
 
         // when
-        CouponIssueResponse response = couponService.issueV1(request);
+        CouponIssueResponse response = couponServiceV1.issue(request);
 
         // then
         assertThat(response.userId()).isEqualTo(1L);
@@ -82,7 +82,7 @@ class CouponServiceUnitTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> couponService.issueV1(request))
+        assertThatThrownBy(() -> couponServiceV1.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
 
@@ -99,7 +99,7 @@ class CouponServiceUnitTest {
         when(couponRepository.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> couponService.issueV1(request))
+        assertThatThrownBy(() -> couponServiceV1.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 쿠폰입니다.");
 
@@ -119,7 +119,7 @@ class CouponServiceUnitTest {
                 .thenReturn(Optional.of(existingIssuance));
 
         // when & then
-        assertThatThrownBy(() -> couponService.issueV1(request))
+        assertThatThrownBy(() -> couponServiceV1.issue(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복으로 발급할 수 없는 쿠폰입니다.");
 
