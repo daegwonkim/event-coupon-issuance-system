@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
@@ -66,6 +67,24 @@ public class KafkaConfig {
 
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(3);
+
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> batchKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+
+        factory.setConsumerFactory(consumerFactory());
+
+        // Batch 모드 설정
+        factory.setBatchListener(true);
+
+        factory.setConcurrency(3);
+
+        // ACK 모드 설정 (배치 단위로 커밋)
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
 
         return factory;
     }
