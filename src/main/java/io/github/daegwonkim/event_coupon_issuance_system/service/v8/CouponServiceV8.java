@@ -10,6 +10,7 @@ import io.github.daegwonkim.event_coupon_issuance_system.repository.CouponReposi
 import io.github.daegwonkim.event_coupon_issuance_system.repository.UserRepository;
 import io.github.daegwonkim.event_coupon_issuance_system.service.ICouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,7 @@ public class CouponServiceV8 implements ICouponService {
                 couponIssuanceRepository.findByUserIdAndCouponId(request.userId(), request.couponId());
 
         if (couponIssuance.isPresent()) {
-            throw new IllegalStateException("중복으로 발급할 수 없는 쿠폰입니다.");
+            throw new DataIntegrityViolationException("중복으로 발급할 수 없는 쿠폰입니다.");
         }
 
         CouponIssuance newCouponIssuance = CouponIssuance.create(coupon, user);

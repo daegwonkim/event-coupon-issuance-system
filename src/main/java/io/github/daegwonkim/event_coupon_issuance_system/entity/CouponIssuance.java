@@ -7,7 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "coupon_issuances")
+@Table(name = "coupon_issuances",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_coupon_user",
+                        columnNames = {"coupon_id", "user_id"}
+                )
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CouponIssuance extends BaseEntity {
 
