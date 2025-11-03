@@ -4,9 +4,11 @@ import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueRequest;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v8.CouponServiceV8;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Slf4j
@@ -18,25 +20,29 @@ public class CouponConsumer {
 
     @KafkaListener(
             topics = "coupon-issue",
-            containerFactory = "kafkaListenerContainerFactory",
-            groupId = "coupon-issue-group"
+            containerFactory = "batchKafkaListenerContainerFactory",
+            groupId = "coupon-issue-group",
+            properties = {
+                    "max.poll.records=10",
+            }
     )
-    public void consumeIssueRequest(CouponIssueRequest request) {
-        try {
-            log.info("쿠폰 발급 처리 시작 - userId: {}, couponId: {}",
-                    request.userId(), request.couponId());
+    public void consumeIssueRequest(List<ConsumerRecord<String, CouponIssueRequest>> records) {
+        for (ConsumerRecord<String, CouponIssueRequest> record : records) {
+            CouponIssueRequest request = record.value();
 
-            couponService.issue(request);
+            try {
+                log.info("쿠폰 발급 처리 시작 - userId: {}, couponId: {}",
+                        request.userId(), request.couponId());
 
-            log.info("쿠폰 발급 완료 - userId: {}, couponId: {}",
-                    request.userId(), request.couponId());
-        } catch (DataIntegrityViolationException e) {
-            log.warn("쿠폰 중복 발급 요청 감지 - userId: {}, couponId: {}, error: {}",
-                    request.userId(), request.couponId(), e.getMessage());
-        } catch (Exception e) {
-            log.error("쿠폰 발급 실패 - userId: {}, couponId: {}, error: {}",
-                    request.userId(), request.couponId(), e.getMessage());
-            throw e;
+                couponService.issue(request);
+
+                log.info("쿠폰 발급 완료 - userId: {}, couponId: {}",
+                        request.userId(), request.couponId());
+            } catch (Exception e) {
+                log.error("쿠폰 발급 실패 - userId: {}, couponId: {}, error: {}",
+                        request.userId(), request.couponId(), e.getMessage());
+                throw e;
+            }
         }
     }
 }

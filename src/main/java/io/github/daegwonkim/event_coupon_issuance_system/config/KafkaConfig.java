@@ -93,8 +93,7 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> kafkaListenerContainerFactory(
-            CommonErrorHandler errorHandler
-    ) {
+            CommonErrorHandler errorHandler) {
         ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
@@ -108,7 +107,8 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> batchKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> batchKafkaListenerContainerFactory(
+            CommonErrorHandler errorHandler) {
         ConcurrentKafkaListenerContainerFactory<String, CouponIssueRequest> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
@@ -119,7 +119,10 @@ public class KafkaConfig {
 
         factory.setConcurrency(3);
 
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        // ACK 모드 설정 (배치 단위로 커밋)
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
+
+        factory.setCommonErrorHandler(errorHandler);
 
         return factory;
     }
