@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableRetry
 @EnableJpaAuditing
-@EnableScheduling
+//@EnableScheduling
 @SpringBootApplication
 public class EventCouponIssuanceSystemApplication {
 
