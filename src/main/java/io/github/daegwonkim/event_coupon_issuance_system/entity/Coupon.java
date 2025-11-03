@@ -32,6 +32,12 @@ public class Coupon extends BaseEntity {
     }
 
     public void decreaseStock() {
+        try {
+            Thread.sleep(50); // 50ms 인위적 처리 지연
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         if (stock <= 0) {
             throw new IllegalArgumentException("쿠폰 재고가 모두 소진되었습니다.");
         }

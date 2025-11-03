@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "coupon_issuances",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_coupon_user",
-                        columnNames = {"coupon_id", "user_id"}
-                )
-        })
+@Table(name = "coupon_issuances"
+//        uniqueConstraints = {
+//                @UniqueConstraint(
+//                        name = "uk_coupon_user",
+//                        columnNames = {"coupon_id", "user_id"}
+//                )
+//        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CouponIssuance extends BaseEntity {
 
@@ -21,18 +22,16 @@ public class CouponIssuance extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id", nullable = false)
-    private Coupon coupon;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "coupon_id")
+    private Long couponId;
 
-    public static CouponIssuance create(Coupon coupon, User user) {
+    public static CouponIssuance create(Long user_id, Long coupon_id) {
         CouponIssuance couponIssuance = new CouponIssuance();
-        couponIssuance.coupon = coupon;
-        couponIssuance.user = user;
+        couponIssuance.userId = user_id;
+        couponIssuance.couponId = coupon_id;
         return couponIssuance;
     }
 }

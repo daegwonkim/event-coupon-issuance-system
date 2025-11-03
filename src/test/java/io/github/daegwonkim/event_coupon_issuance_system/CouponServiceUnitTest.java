@@ -111,7 +111,7 @@ class CouponServiceUnitTest {
     void issueV1_DuplicateIssuance() {
         // given
         CouponIssueRequest request = new CouponIssueRequest(1L, 1L);
-        CouponIssuance existingIssuance = CouponIssuance.create(testCoupon, testUser);
+        CouponIssuance existingIssuance = CouponIssuance.create(1L, 1L);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         when(couponRepository.findById(1L)).thenReturn(Optional.of(testCoupon));

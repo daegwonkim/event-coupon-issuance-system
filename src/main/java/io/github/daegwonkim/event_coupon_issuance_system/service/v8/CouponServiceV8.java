@@ -28,23 +28,26 @@ public class CouponServiceV8 implements ICouponService {
     @Override
     @Transactional
     public CouponIssueResponse issue(CouponIssueRequest request) {
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Long userId = request.userId();
+        Long couponId = request.couponId();
 
-        Coupon coupon = couponRepository.findById(request.couponId())
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
 
-        Optional<CouponIssuance> couponIssuance =
-                couponIssuanceRepository.findByUserIdAndCouponId(request.userId(), request.couponId());
+//        Optional<CouponIssuance> couponIssuance =
+//                couponIssuanceRepository.findByUserIdAndCouponId(userId, couponId);
+//
+//        if (couponIssuance.isPresent()) {
+//            throw new IllegalStateException("중복으로 발급할 수 없는 쿠폰입니다.");
+//        }
 
-        if (couponIssuance.isPresent()) {
-            throw new DataIntegrityViolationException("중복으로 발급할 수 없는 쿠폰입니다.");
-        }
-
-        CouponIssuance newCouponIssuance = CouponIssuance.create(coupon, user);
+        CouponIssuance newCouponIssuance = CouponIssuance.create(userId, couponId);
         coupon.decreaseStock();
         couponIssuanceRepository.save(newCouponIssuance);
 
-        return new CouponIssueResponse(request.userId(), request.couponId(), LocalDateTime.now());
+        return new CouponIssueResponse(userId, couponId, LocalDateTime.now());
     }
 }

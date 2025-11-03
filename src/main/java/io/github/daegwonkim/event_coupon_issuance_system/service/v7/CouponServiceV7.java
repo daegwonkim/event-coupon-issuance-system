@@ -29,13 +29,13 @@ public class CouponServiceV7 implements ICouponService {
         Long userId = request.userId();
         Long couponId = request.couponId();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
 
-        CouponIssuance newCouponIssuance = CouponIssuance.create(coupon, user);
+        CouponIssuance newCouponIssuance = CouponIssuance.create(userId, couponId);
         // Coupon 재고 업데이트 제거 (데드락 방지)
         // Coupon 재고는 Redis가 정합성 보장, DB 재고는 별도 스케줄러로 동기화
         couponIssuanceRepository.save(newCouponIssuance);
