@@ -78,11 +78,6 @@ public class CouponServiceV7Wrapper implements ICouponService {
                 local userId = ARGV[1]
                 local timestamp = ARGV[2]
                 
-                -- 중복 발급 체크
-                if redis.call('ZSCORE', issueKey, userId) then
-                    return -1
-                end
-                
                 -- 재고 체크
                 local currentStock = redis.call('GET', stockKey)
                 if not currentStock then
@@ -109,11 +104,6 @@ public class CouponServiceV7Wrapper implements ICouponService {
                 userId.toString(),
                 String.valueOf(System.currentTimeMillis())
         );
-
-        if (result == -1) {
-            log.warn("중복 발급 시도. userId={}, couponId={}", userId, couponId);
-            throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
-        }
 
         if (result == -2) {
             log.error("Redis 재고 키 없음. stockKey={}", stockKey);

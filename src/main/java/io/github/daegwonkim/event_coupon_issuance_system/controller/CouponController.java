@@ -2,13 +2,14 @@ package io.github.daegwonkim.event_coupon_issuance_system.controller;
 
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueRequest;
 import io.github.daegwonkim.event_coupon_issuance_system.dto.CouponIssueResponse;
+import io.github.daegwonkim.event_coupon_issuance_system.kafka.CouponProducer;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v1.CouponServiceV1;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v2.CouponServiceV2Wrapper;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v3.CouponServiceV3Wrapper;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v4.CouponServiceV4;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v5.CouponServiceV5;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v6.CouponServiceV6;
-import io.github.daegwonkim.event_coupon_issuance_system.service.v7.CouponServiceV7;
+import io.github.daegwonkim.event_coupon_issuance_system.service.v7.CouponServiceV7Wrapper;
 import io.github.daegwonkim.event_coupon_issuance_system.service.v8.CouponServiceV8;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,8 @@ public class CouponController {
     private final CouponServiceV4 couponServiceV4;
     private final CouponServiceV5 couponServiceV5;
     private final CouponServiceV6 couponServiceV6;
-    private final CouponServiceV7 couponServiceV7;
-    private final CouponServiceV8 couponServiceV8;
+    private final CouponServiceV7Wrapper couponServiceV7;
+    private final CouponProducer couponProducer;
 
     @PostMapping(value = "/v1")
     public CouponIssueResponse issueV1(@RequestBody CouponIssueRequest request) {
@@ -66,7 +67,7 @@ public class CouponController {
     }
 
     @PostMapping(value = "/v8")
-    public CouponIssueResponse issueV8(@RequestBody CouponIssueRequest request) {
-        return couponServiceV8.issue(request);
+    public void issueV8(@RequestBody CouponIssueRequest request) {
+        couponProducer.sendIssueRequest(request);
     }
 }
