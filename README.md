@@ -43,7 +43,7 @@
 | Redis Sorted Set(w. Lua Script) | 50.0 | 0,007ms   | 0,143ms   | 0.00%  |
 | Message Queue(Kafka)            | 50.0 | 0,002ms   | 0,141ms   | 0.00%  |
 
-<img width="944" height="600" alt="_-20251104T051812" src="https://github.com/user-attachments/assets/9a462460-2922-44b4-a0ae-13e1cb15199f" />
+<img width="944" height="600" alt="graphy-export-20251104T054329" src="https://github.com/user-attachments/assets/02c023ef-6155-4505-a8d5-cb74f47fade1" />
 
 ## 5. 결론
 **synchronized**
